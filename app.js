@@ -65,14 +65,37 @@ app.get('/todos/:id/edit', (req, res) => {
 
 app.post('/todos/:id/edit', (req, res) => {
   const id = req.params.id
+  /* 
+  原寫法：
   const name = req.body.name
+  const isDone = req.body.isDone 
+  */
+  const { name, isDone } = req.body // 改使用解構賦值 (destructuring assignment)語法
+  
   return Todo.findById(id) // 查詢資料
   .then (todo => {
     todo.name = name
+    /*
+    原寫法：
+    if (isDone === 'on') {
+    todo.isDone = true
+    } else {
+    todo.isDone = false
+    }
+    */
+    todo.isDone = isDone === 'on'
     return todo.save()
   })
   .then(() => res.redirect (`/todos/${id}`)) // 如果儲存成功，導向首頁
   .catch(error => console.log(error))
+})
+
+app.post('/todos/:id/delete', (req, res) => {
+  const id = req.params.id
+  return Todo.findById(id)
+    .then(todo => todo.remove())
+    .then(() => res.redirect('/'))
+    .catch(error => console.log(error))
 })
 
 app.listen(3000, () => {
