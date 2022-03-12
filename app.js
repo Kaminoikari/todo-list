@@ -3,6 +3,7 @@ const Todo = require ('./models/todo') // 載入 Todo model
 const express = require('express');
 const mongoose = require('mongoose');
 const exphbs = require ('express-handlebars');
+const methodOverride = require ('method-override')
 
 const app = express();
 
@@ -23,6 +24,8 @@ app.engine ('hbs', exphbs ({ defaultLayout: 'main', extname: '.hbs'}))
 app.set ('view engine', 'hbs')
 
 app.use(bodyParser.urlencoded({ extended: true }))
+
+app.use(methodOverride('_method'))
 
 app.get('/', (req, res) => {
   Todo.find() // 取出Todo model裡的所有資料
@@ -64,7 +67,7 @@ app.get('/todos/:id/edit', (req, res) => {
     .catch(error => console.log(error))
 })
 
-app.post('/todos/:id/edit', (req, res) => {
+app.put('/todos/:id', (req, res) => {
   const id = req.params.id
   /* 
   原寫法：
@@ -91,7 +94,7 @@ app.post('/todos/:id/edit', (req, res) => {
   .catch(error => console.log(error))
 })
 
-app.post('/todos/:id/delete', (req, res) => {
+app.delete('/todos/:id', (req, res) => {
   const id = req.params.id
   return Todo.findById(id)
     .then(todo => todo.remove())
