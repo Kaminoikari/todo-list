@@ -7,7 +7,7 @@ const methodOverride = require ('method-override')
 
 // 引用路由器
 const routes = require('./routes')
-require('./config/mongoose') // Mongoose 連線設定只需要「被執行」，不需要接到任何回傳參數繼續利用，所以這裡不需要再設定變數。
+require('./config/mongoose') 
 
 const app = express();
 
